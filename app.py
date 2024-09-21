@@ -11,3 +11,14 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task = db.Column(db.String(80),unique=True, nullable=False)
+
+#Creating the database tables
+with app.app.context():
+    db.create_all()
+
+# Helper functions for serialization
+def serialize_todo(todo):
+    return {
+        'id': todo.id,
+        'task': todo.task
+    }
