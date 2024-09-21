@@ -23,6 +23,7 @@ def serialize_todo(todo):
         'task': todo.task
     }
 
+#Endpoint to add a new todo
 @app.route('/todos', methods=['POST'])
 def add_todo():
     task = request.json['task']
@@ -31,7 +32,15 @@ def add_todo():
     db.session.commit()
     return jsonify(serialize_todo(new_todo)), 201
 
+# Endpoint to get all todos
 @app.route('/todos', methods=['GET'])
 def get_todos():
     todos = Todo.query.all()
     return jsonify([serialize_todo(todo) for todo in todos]), 200
+
+@app.route('/todos/<int:id>', methods=['DELETE'])
+def delete_todo(id):
+    todo = Todo.query.get(id)
+    db.session.delete(todo)
+    db.session.commit()
+    return jsonify({'message': f'Todo with id {id} deleted successfully'}), 200
