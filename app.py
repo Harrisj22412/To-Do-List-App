@@ -22,3 +22,11 @@ def serialize_todo(todo):
         'id': todo.id,
         'task': todo.task
     }
+
+@app.route('/todos', methods=['POST'])
+def add_todo():
+    task = request.json['task']
+    new_todo = Todo(task=task)
+    db.session.add(new_todo)
+    db.session.commit()
+    return jsonify(serialize_todo(new_todo)), 201
