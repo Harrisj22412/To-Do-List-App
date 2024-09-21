@@ -30,3 +30,8 @@ def add_todo():
     db.session.add(new_todo)
     db.session.commit()
     return jsonify(serialize_todo(new_todo)), 201
+
+@app.route('/todos', methods=['GET'])
+def get_todos():
+    todos = Todo.query.all()
+    return jsonify([serialize_todo(todo) for todo in todos]), 200
