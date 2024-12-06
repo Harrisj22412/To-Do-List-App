@@ -3,18 +3,22 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost/todo'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/todo'
 db = SQLAlchemy(app)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    task = db.Column(db.String(80),unique=True, nullable=False)
+    title = db.Column(db.String(80), nullable=False)
+    description = db.Column(db.String(200), nullable=True)
+    done = db.Column(db.Boolean, default=False)
 
 #Creating the database tables
-with app.app.context():
-    db.create_all()
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
 
 # Helper functions for serialization
 def serialize_todo(todo):
